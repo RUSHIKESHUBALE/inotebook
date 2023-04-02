@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const User = require("../models/User");
 const { body, validationResult } = require('express-validator');
+var bcrypt = require('bcryptjs');
+var jwt = require('jsonwebtoken');
 
-router.post('/',
+router.post('/createuser',
     [
         // username must be an email
         body('email').isEmail(),
@@ -12,27 +14,46 @@ router.post('/',
         body('password', 'Enter a valid password').isLength({ min: 1 })
     ],
 
-    (req, res) => {
+    async (req, res) => {
         // Finds the validation errors in this request and wraps them in an object with handy functions
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        User.create({
+        try{
+        // Check if there is any user already exist
+        let user = await User.findOne(req.body);
+        if (user){
+            return res.status(400).json(
+                {
+                    "error" : `${req.body.email} already exists` 
+                })
+        }
+
+        var salt = bcrypt.genSaltSync(10);
+        var hashedPassword = bcrypt.hashSync(req.body.password, salt);
+
+        user = await User.create({
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password,
+            password: hashedPassword,
         })
-            .then(user => res.json(user))
-            .catch(err => {
-                res.json(
-                    {
-                        error: err,
-                        message: "Please enter different email address"
-                    }
-                )
-            })
+
+        const JWT_secret = "Amisha";
+        const data = {
+            user:{
+                id : user.id
+            }
+        }
+
+        var token = jwt.sign(data, JWT_secret);
+
+
+        res.json({"Details": user, token});
+        }catch(err){
+            res.status(500).json({"error" : err, "message" : "something went wrong"});
+        }
     }
 )
 
