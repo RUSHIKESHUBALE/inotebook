@@ -4,7 +4,10 @@ const User = require("../models/User");
 const { body, validationResult } = require('express-validator');
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
+var fetchuser = require('../middleware/fetchuser');
 
+
+// This is route 1 for creating a new user and validating whether the details are allowed
 router.post('/createuser',
     [
         // username must be an email
@@ -23,7 +26,7 @@ router.post('/createuser',
 
         try{
         // Check if there is any user already exist
-        let user = await User.findOne(req.body);
+        let user = await User.findOne({ email: req.body.email });
         if (user){
             return res.status(400).json(
                 {
@@ -52,11 +55,12 @@ router.post('/createuser',
 
         res.json({"Details": user, token});
         }catch(err){
-            res.status(500).json({"error" : err, "message" : "something went wrong"});
+            res.status(500).json({"error" : err, "message" : err.message});
         }
     }
 )
 
+// This is the route 2 for creating tokens for every login session 
 router.post('/loginuser',
     [
         // username must be an email
@@ -72,7 +76,6 @@ router.post('/loginuser',
             return res.status(400).json({ errors: errors.array() });
         }
 
-        
         const {email, password} = req.body;
 
         try{
@@ -110,5 +113,16 @@ router.post('/loginuser',
         }
     }
 )
+
+// This is route 3 for fetching the user data from the generated token
+router.post('/getuser', fetchuser,  //fetchuser is middlewar here 
+    async(req, res)=>{
+        try {
+            const userDetails = await User.findById(req.user.id).select("-password"); // Exclude password
+            res.status(200).json(userDetails);
+        } catch(err){
+            res.status(500).json({"error" : err, "message" : "something went wrong in login"});
+        }
+})
 
 module.exports = router;
