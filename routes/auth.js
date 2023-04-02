@@ -57,4 +57,58 @@ router.post('/createuser',
     }
 )
 
+router.post('/loginuser',
+    [
+        // username must be an email
+        body('email', 'Enter correct email').isEmail(),
+        // password must not be empty
+        body('password', 'Password can not be empty').exists()
+    ],
+
+    async (req, res) => {
+        // Finds the validation errors in this request and wraps them in an object with handy functions
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        
+        const {email, password} = req.body;
+
+        try{
+        // Check if there is any user already exist
+        let user = await User.findOne({email});
+        if (!user){
+            return res.status(400).json(
+                {
+                    "error" : `${req.body.email} does not exists` 
+                })
+        }
+
+        var verified = await bcrypt.compare(password, user.password);
+
+        if (!verified){
+            return res.status(400).json(
+                {
+                    "error" : `${req.body.password} is not correct` 
+                })
+        }
+
+        const JWT_secret = "Amisha";
+        const data = {
+            user:{
+                id : user.id
+            }
+        }
+
+        var token = jwt.sign(data, JWT_secret);
+
+
+        res.json({"greet": `Welcome Mr. ${user.name}!`,"Details": user, token});
+        }catch(err){
+            res.status(500).json({"error" : err, "message" : "something went wrong in login"});
+        }
+    }
+)
+
 module.exports = router;
