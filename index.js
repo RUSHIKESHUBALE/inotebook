@@ -11,15 +11,15 @@ app.use(express.json());   // For being able to use req body, this is the middle
 
 //Required routes 
 app.use('/api/auth', require('./routes/auth'))
-// app.use('/api/notes', require('./routes/notes'))
+app.use('/api/notes', require('./routes/notes'))
 
 // app.get(('/api/signin'), (req, res)=>{
 //     res.send("I am signup page")
 // })
     
-app.use('/', (req, res)=>{
-    res.send("Hey I am sending a response!");
-});
+// app.use('/', (req, res)=>{
+//     res.send("Hey I am sending a response!");
+// });
 
 app.listen(port, ()=>{
     console.log(`Server started on port ${port}`)
