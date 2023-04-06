@@ -58,4 +58,34 @@ router.post('/addnote', fetchuser,
 
 )
 
+router.put('/addnote/:id', fetchuser, 
+    async (req, res)=>{
+
+        // Get the values from body
+        const {title, description, tag} = req.body;
+
+        // Create a new note 
+        const newNote = {};
+        if (title){newNote.title = title};
+        if (description){newNote.description = description};
+        if (tag){newNote.tag = tag};
+
+        // Get the existing note from id in the params if not valid id then return not found 
+        let note = await Notes.findById(req.params.id);
+        if (!note){
+            return res.status(404).send("Note not found");
+        }
+
+        // Chcek if the user is correct for that note 
+        if (note.user.toString() !== req.user.id){
+            return res.status(401).send("Not allowed to change");
+        }
+
+        // update the existing note 
+        note = await Notes.findByIdAndUpdate(req.params.id, {$set : newNote}, {new:true});
+
+        res.json({note, message: "Updated the note"});
+    }
+)
+
 module.exports = router;
