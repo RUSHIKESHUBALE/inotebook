@@ -2,6 +2,8 @@ import './App.css';
 import About from './Components/About';
 import Home from './Components/Home';
 import Navbar from './Components/Navbar';
+import NoteStates from './context/notes/NotesStates'
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,6 +13,7 @@ import {
 function App() {
   return (
     <>
+    <NoteStates>
       <Router>
         <Navbar />
         <Routes>
@@ -18,6 +21,7 @@ function App() {
           <Route exaxt path = '/about' element={<About/>}/>
         </Routes>
       </Router>
+    </NoteStates>
     </>
   );
 }
