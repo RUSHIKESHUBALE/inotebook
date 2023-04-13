@@ -1,5 +1,6 @@
 import './App.css';
 import About from './Components/About';
+import Alert from './Components/Alert';
 import Home from './Components/Home';
 import Navbar from './Components/Navbar';
 import NoteStates from './context/notes/NotesStates';
@@ -16,6 +17,7 @@ function App() {
       <NoteStates>
         <Router>
           <Navbar />
+          <Alert message ="Your note has been added" alertType = "primary"/>
           <div className="container">
             <Routes>
               <Route exaxt path='/' element={<Home />} />
