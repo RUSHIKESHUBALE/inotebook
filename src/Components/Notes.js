@@ -16,8 +16,8 @@ function Notes() {
             <AddNote />
             <div className="row my-3">
                 <h2>Your notes</h2>
-                {notes.map((note, addNote) => {
-                    return <NotesItem key={note._id} title={note.title} description={note.description} />
+                {notes.map((note) => {
+                    return <NotesItem key={note._id} note = {note} /> // Sending the whole note as props
                 })}
             </div>
         </>
