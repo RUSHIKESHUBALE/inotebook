@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import NotesItem from './NotesItem'
 import noteContext from '../context/notes/notescontext'
 import AddNote from './AddNote';
@@ -9,7 +9,11 @@ function Notes() {
     const context = useContext(noteContext);
 
     // Assign the values here locally
-    const { notes, setNotes } = context;
+    const { notes, getNotes } = context;
+
+    useEffect(()=>{
+        getNotes();
+    },[])
 
     return (
         <>
