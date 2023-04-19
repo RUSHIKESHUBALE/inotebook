@@ -1,12 +1,14 @@
 // import mongoose from 'mongoose';
 const connectToMongo = require('./db');
 const express = require('express');
+const cors = require('cors')
 
 const port = 5000;
 
 const app = express();
 connectToMongo();
 
+app.use(cors())            // For allowing browser to make API calls
 app.use(express.json());   // For being able to use req body, this is the middleware
 
 //Required routes 
