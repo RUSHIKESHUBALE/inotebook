@@ -62,15 +62,19 @@ const NoteState = (props) => {
       },
     });
     const jsonValues = await response.json();
-    console.log(jsonValues);
+    // console.log(jsonValues);
     setNotes(jsonValues)
   }
 
 
   // Add note
   const addNote = async (title, description, tag) => {
-    // Logic to make API calls
-    // tag = "change this"
+
+    // Input is getting in array so need to take its value
+    title = title[0];
+    description = description[0];
+    tag = tag[0];
+
     const response = await fetch(`${host}/api/notes/addnote`, {
       method: "POST",
       headers: {
@@ -79,13 +83,12 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag })
     });
-
-    console.log(response)
+    const jsonValues = await response.json();
 
     console.log("adding a new note")
     // TODO : Make api call to save this notes in DB
     let newNote = {
-      "_id": "642f702asd73",
+      "_id": jsonValues.newNote._id,
       "user": "642eb00c41450ad718e4343a",
       "title": title,
       "description": description,
@@ -97,7 +100,19 @@ const NoteState = (props) => {
     setNotes(notes.concat(newNote))
   }
   // Delete note
-  const deleteNote = (id) => {
+  const deleteNote = async (id) => {
+
+    // API call for delete
+    const response = await fetch(`${host}/api/notes/deleteNote/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQyZWIwMGM0MTQ1MGFkNzE4ZTQzNDNhIn0sImlhdCI6MTY4MDc4MTM0M30.d22oIdskPRJ3JxmNdKYMG_SvnX1vOPqehyjMZrzFI7M"
+      },
+    });
+    const json1 = response.json();
+    // console.log(json1);
+
     console.log("Deleting the note" + id);
     const removethatNote = (note) => {
       return note._id !== id;
@@ -111,6 +126,7 @@ const NoteState = (props) => {
   const editNote = async (id, title, description, tag) => {
 
     // Logic to call the API 
+    
     const response = await fetch(`${host}/api/notes/addnote/${id}`, {
       method: "POST",
       headers: {
@@ -119,7 +135,7 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag }),
     });
-    const json = response.json();
+    // const json = response.json();
 
     for (let index = 0; index < notes.length; index++) {
       const note = notes[index];
@@ -141,3 +157,5 @@ const NoteState = (props) => {
 }
 
 export default NoteState;
+
+// "64420ba123405c84b8d5e202"
