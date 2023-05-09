@@ -128,7 +128,7 @@ const NoteState = (props) => {
     // Logic to call the API 
     
     const response = await fetch(`${host}/api/notes/addnote/${id}`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQyZWIwMGM0MTQ1MGFkNzE4ZTQzNDNhIn0sImlhdCI6MTY4MDc4MTM0M30.d22oIdskPRJ3JxmNdKYMG_SvnX1vOPqehyjMZrzFI7M"
@@ -137,15 +137,18 @@ const NoteState = (props) => {
     });
     // const json = response.json();
 
-    for (let index = 0; index < notes.length; index++) {
-      const note = notes[index];
-      if (note._id === id) {
-        note.title = title;
-        note.description = description;
-        note.tag = tag;
-      }
+    let newNotes = JSON.parse(JSON.stringify(notes))
 
+    for (let index = 0; index < newNotes.length; index++) {
+      const note = newNotes[index];
+      if (note._id === id) {
+        newNotes[index].title = title;
+        newNotes[index].description = description;
+        newNotes[index].tag = tag;
+        break;
+      }
     }
+    setNotes(newNotes);
   }
 
 

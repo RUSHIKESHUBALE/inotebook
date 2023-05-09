@@ -24,17 +24,17 @@ function AddNote() {
             <form>
                 <div className="form-group">
                     <label htmlFor="title">Title</label>
-                    <input type="text" className="form-control" id="title" name="title" aria-describedby="emailHelp" placeholder="Enter Title" onChange={onChange}/>
+                    <input type="text" className="form-control" id="title" name="title" minLength={5} required aria-describedby="emailHelp" placeholder="Enter Title" onChange={onChange}/>
                 </div>
                 <div className="form-group my-3">
                     <label htmlFor="description">Description</label>
-                    <textarea type="text" className="form-control" id="description" name="description"  rows="8" onChange={onChange}/>
+                    <textarea type="text" className="form-control" id="description" name="description" minLength={5} required rows="8" onChange={onChange}/>
                 </div>
                 <div className="form-group">
                     <label htmlFor="tag">Tag</label>
                     <input type="text" className="form-control" id="tag" name="tag" aria-describedby="emailHelp" placeholder="Enter Tag" onChange={onChange}/>
                 </div>
-                <button type="submit" className="btn btn-primary my-3" onClick={handleClick}>Add Note</button>
+                <button disabled = {note.title.length > 5 || note.description.length > 5} type="submit" className="btn btn-primary my-3" onClick={handleClick}>Add Note</button>
             </form>
         </div>
     )
