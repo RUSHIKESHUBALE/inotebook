@@ -10,7 +10,8 @@ function NotesItem(props) {
 
     const handleClick = (e)=>{
         e.preventDefault();
-        deleteNote(note._id)
+        deleteNote(note._id);
+        props.showAlert("danger", "Note deleted Succesfully")
     }
 
     return (

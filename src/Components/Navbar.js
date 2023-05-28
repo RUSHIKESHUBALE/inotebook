@@ -1,10 +1,17 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import {
     useLocation,
-    Link
-  } from "react-router-dom";
+    Link,
+    useNavigate
+} from "react-router-dom";
 
 function Navbar() {
+
+    let navigate = useNavigate();
+    const handleLogout = ()=>{
+        localStorage.removeItem('token');
+        navigate("/login");
+    }
 
     let location = useLocation();
     return (
@@ -17,13 +24,13 @@ function Navbar() {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <Link className={`nav-link ${location.pathname === "/" ? "active":""}`} aria-current="page" to="/">Home</Link>
+                            <Link className={`nav-link ${location.pathname === "/" ? "active" : ""}`} aria-current="page" to="/">Home</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className={`nav-link ${location.pathname === "/about" ? "active":""}`} to="/about">About</Link>
+                            <Link className={`nav-link ${location.pathname === "/about" ? "active" : ""}`} to="/about">About</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className={`nav-link ${location.pathname === "/contact" ? "active":""}`} to="/contact">Contact</Link>
+                            <Link className={`nav-link ${location.pathname === "/contact" ? "active" : ""}`} to="/contact">Contact</Link>
                         </li>
                         <li className="nav-item dropdown">
                             <Link className="nav-link dropdown-toggle" to="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -37,10 +44,10 @@ function Navbar() {
                             </ul>
                         </li>
                     </ul>
-                    <form className="d-flex" role="search">
-                        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                        <button className="btn btn-outline-info" type="submit">Search</button>
-                    </form>
+            {!localStorage.getItem('token')?<form className="d-flex" role="search">
+                <Link to="/login" className="btn btn-primary btn-lg active mx-1" role="button" aria-pressed="true">Login</Link>
+                <Link to="/signup" className="btn btn-primary btn-lg active mx-1" role="button" aria-pressed="true">Signup</Link>
+            </form> : <button className="btn btn-primary btn-lg active mx-1" onClick={handleLogout}>Logout</button>}
                 </div>
             </div>
         </nav>

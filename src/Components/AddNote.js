@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import noteContext from '../context/notes/notescontext'
 
-function AddNote() {
+function AddNote(props) {
     // Store the context in some variable
     const context = useContext(noteContext);
 
@@ -13,6 +13,7 @@ function AddNote() {
     const handleClick = (e)=>{
         e.preventDefault();  // For not reloading page
         addNote(note.title, note.description, note.tag); // Whatever being changed at name (in the input of addNote form) equate it to its value
+        props.showAlert("success", "New Note added!")
     }
 
     const onChange = (e)=>{
